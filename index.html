@@ -4,9 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Crud</title>
 </head>
-<body>
+<body class="bg-dark">
     
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="h4">Add Task</h1>
+                        <form id="task-form">
+                            <label for="title">Title</label>
+                            <input class="form-control mb-3" type="text" placeholder="Task Title" id="task-title">
+                            <label for="description">Description</label>
+                            <textarea class="form-control mb-3" id="task-description" rows="3" placeholder="Task Description"></textarea>
+                            <button class="btn btn-primary" id="btn-task-save">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" id="task-container"></div>
+        </div>    
+    </div>
+    <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyBfVAZSyfmN6PkyWVBiahG3X7gwNEbKfYg",
+    authDomain: "thecrud-6ff76.firebaseapp.com",
+    projectId: "thecrud-6ff76",
+    storageBucket: "thecrud-6ff76.appspot.com",
+    messagingSenderId: "915641082520",
+    appId: "1:915641082520:web:8ea15895dc24dbce4a26ed"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    </script>
+    <script type="module" src="./index.js"></script>
 </body>
-</html>
+</html> 
