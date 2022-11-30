@@ -1,18 +1,79 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask} from './firebase.js'
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-apiKey: "AIzaSyBfVAZSyfmN6PkyWVBiahG3X7gwNEbKfYg",
-authDomain: "thecrud-6ff76.firebaseapp.com",
-projectId: "thecrud-6ff76",
-storageBucket: "thecrud-6ff76.appspot.com",
-messagingSenderId: "915641082520",
-appId: "1:915641082520:web:8ea15895dc24dbce4a26ed"
-};
+const taskForm = document.getElementById("task-form");
+const tasksContainer = document.getElementById("task-container");
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let editStatus = false;
+let id = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+onGetTasks((querySnapshot) => {
+    
+
+    tasksContainer.innerHTML = '';
+    
+    querySnapshot.forEach((doc) => {
+        const task = doc.data();
+        tasksContainer.innerHTML += `
+        <div class="card card-body mt-2 border-primary">
+            <h3 class="h5">${task.title}</h3>
+            <p>${task.description}</p>
+            <div>
+                <button class='btn btn-primary btn-delete' data-id="${doc.id}">Delete</button>
+                <button class='btn btn-secondary btn-edit' data-id="${doc.id}">Edit</button>
+
+            </div>
+        </div>
+        
+        
+        `;
+    });
+    
+
+    const btnsDelete = tasksContainer.querySelectorAll('.btn-delete')
+
+    btnsDelete.forEach(btn => {
+        btn.addEventListener('click', ({target: {dataset}}) => {
+            deleteTask(dataset.id)
+        })
+    })
+
+
+    const btnsEdit = tasksContainer.querySelectorAll('.btn-edit')
+    btnsEdit.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            const doc = await getTask(e.target.dataset.id)
+            const task = doc.data()
+
+            taskForm['task-title'].value = task.title
+            taskForm['task-description'].value = task.description
+
+            editStatus = true
+            id = doc.id
+
+            taskForm['btn-task-save'].innerText = 'Update'
+        })
+    })
+
+
+});
+
+});
+
+taskForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const title = taskForm['task-title']
+    const description = taskForm['task-description']
+
+    if (!editStatus){
+        saveTask(title.value, description.value)
+    } else{
+        updateTask (id, {
+            title: title.value,
+            description: description.value,
+        });
+        editStatus = false;
+    }
+
+    taskForm.reset()
+})
